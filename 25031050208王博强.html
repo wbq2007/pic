@@ -81,16 +81,58 @@
 
         <script>
             (function(){
+                const MAX_CLICKS = 50;
                 var countEl = document.getElementById('count');
                 var btn = document.getElementById('counterBtn');
                 var count = Number(localStorage.getItem('pageCounter') || 0);
-                if (countEl) { countEl.textContent = count; }
-                if (btn) {
-                    btn.addEventListener('click', function(){
-                        count++;
-                        localStorage.setItem('pageCounter', count);
-                        if (countEl) countEl.textContent = count;
-                    });
+
+                function showCrash(message) {
+                    try {
+                        if (document.getElementById('crashOverlay')) return;
+                        var overlay = document.createElement('div');
+                        overlay.id = 'crashOverlay';
+                        overlay.style.position = 'fixed';
+                        overlay.style.top = '0';
+                        overlay.style.left = '0';
+                        overlay.style.width = '100%';
+                        overlay.style.height = '100%';
+                        overlay.style.backgroundColor = 'rgba(0,0,0,0.85)';
+                        overlay.style.color = '#fff';
+                        overlay.style.display = 'flex';
+                        overlay.style.alignItems = 'center';
+                        overlay.style.justifyContent = 'center';
+                        overlay.style.zIndex = '9999';
+                        overlay.style.fontSize = '36px';
+                        overlay.style.fontWeight = '700';
+                        overlay.textContent = message || '网站已崩溃';
+                        document.body.appendChild(overlay);
+                        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+
+                try {
+                    if (countEl) countEl.textContent = count;
+                    if (count > MAX_CLICKS) {
+                        showCrash('网站已崩溃');
+                    }
+                    if (btn) {
+                        btn.addEventListener('click', function(){
+                            try {
+                                count++;
+                                localStorage.setItem('pageCounter', count);
+                                if (countEl) countEl.textContent = count;
+                                if (count > MAX_CLICKS) {
+                                    showCrash('网站已崩溃');
+                                }
+                            } catch (err) {
+                                showCrash('网站已崩溃');
+                            }
+                        });
+                    }
+                } catch (err) {
+                    showCrash('网站已崩溃');
                 }
             })();
         </script>
