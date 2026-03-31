@@ -19,10 +19,34 @@
         .te {
             text-indent:40px;
         }
+        /* 计时器样式 */
+        #timer {
+            text-align: center;
+            margin: 12px auto;
+            font-size: 18px;
+        }
+        #timer .display {
+            font-family: monospace;
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        #timer button {
+            margin: 0 6px;
+            padding: 6px 10px;
+            font-size: 14px;
+        }
     </STYle>
 </head>
 <body>
     <h1>电影影评网</h1>
+    <div id="timer" aria-label="计时器">
+        <div class="display" id="time">00:00:00</div>
+        <div class="controls">
+            <button id="startBtn">开始</button>
+            <button id="pauseBtn" disabled>暂停</button>
+            <button id="resetBtn">重置</button>
+        </div>
+    </div>
     <div style="text-align: center;">
         <img src="image/第一行图片.jpg">
     </div>
@@ -72,5 +96,61 @@
             <li>网站评分：<meter value="80" min="70" max="154" low="59" high="95" optimum="144"></meter></li>
         </ul>
     </details>
+    <script>
+        (function(){
+            const timeEl = document.getElementById('time');
+            const startBtn = document.getElementById('startBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            let timer = null;
+            let elapsed = 0; // milliseconds
+            let last = 0;
+
+            function format(ms) {
+                const totalSeconds = Math.floor(ms / 1000);
+                const hours = String(Math.floor(totalSeconds / 3600)).padStart(2,'0');
+                const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,'0');
+                const seconds = String(totalSeconds % 60).padStart(2,'0');
+                return hours + ':' + minutes + ':' + seconds;
+            }
+
+            function update() {
+                timeEl.textContent = format(elapsed);
+            }
+
+            startBtn.addEventListener('click', function(){
+                if (timer) return;
+                last = Date.now();
+                timer = setInterval(function(){
+                    const now = Date.now();
+                    elapsed += now - last;
+                    last = now;
+                    update();
+                }, 250);
+                startBtn.disabled = true;
+                pauseBtn.disabled = false;
+            });
+
+            pauseBtn.addEventListener('click', function(){
+                if (!timer) return;
+                clearInterval(timer);
+                timer = null;
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+            });
+
+            resetBtn.addEventListener('click', function(){
+                clearInterval(timer);
+                timer = null;
+                elapsed = 0;
+                update();
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+            });
+
+            // 初始化显示
+            update();
+        })();
+    </script>
 </body>
 </html>
