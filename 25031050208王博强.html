@@ -27,11 +27,6 @@
         <img src="image/第一行图片.jpg">
     </div>
 
-    <div id="counter" style="text-align:center; margin:18px 0;">
-        <button id="counterBtn" style="padding:8px 12px; font-size:16px;">点我 +1</button>
-        <span id="count" style="margin-left:10px; font-weight:bold;">0</span>
-    </div>
-
     <div class="movie-carousel">
         <img src="image/第二行图片1.jpg">
         <img src="image/第二行图片2.jpg">
@@ -77,64 +72,5 @@
             <li>网站评分：<meter value="80" min="70" max="154" low="59" high="95" optimum="144"></meter></li>
         </ul>
     </details>
-</details>
-
-        <script>
-            (function(){
-                const MAX_CLICKS = 50;
-                var countEl = document.getElementById('count');
-                var btn = document.getElementById('counterBtn');
-                var count = Number(localStorage.getItem('pageCounter') || 0);
-
-                function showCrash(message) {
-                    try {
-                        if (document.getElementById('crashOverlay')) return;
-                        var overlay = document.createElement('div');
-                        overlay.id = 'crashOverlay';
-                        overlay.style.position = 'fixed';
-                        overlay.style.top = '0';
-                        overlay.style.left = '0';
-                        overlay.style.width = '100%';
-                        overlay.style.height = '100%';
-                        overlay.style.backgroundColor = 'rgba(0,0,0,0.85)';
-                        overlay.style.color = '#fff';
-                        overlay.style.display = 'flex';
-                        overlay.style.alignItems = 'center';
-                        overlay.style.justifyContent = 'center';
-                        overlay.style.zIndex = '9999';
-                        overlay.style.fontSize = '36px';
-                        overlay.style.fontWeight = '700';
-                        overlay.textContent = message || '网站已崩溃';
-                        document.body.appendChild(overlay);
-                        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
-                    } catch (e) {
-                        console.error(e);
-                    }
-                }
-
-                try {
-                    if (countEl) countEl.textContent = count;
-                    if (count > MAX_CLICKS) {
-                        showCrash('网站已崩溃');
-                    }
-                    if (btn) {
-                        btn.addEventListener('click', function(){
-                            try {
-                                count++;
-                                localStorage.setItem('pageCounter', count);
-                                if (countEl) countEl.textContent = count;
-                                if (count > MAX_CLICKS) {
-                                    showCrash('网站已崩溃');
-                                }
-                            } catch (err) {
-                                showCrash('网站已崩溃');
-                            }
-                        });
-                    }
-                } catch (err) {
-                    showCrash('网站已崩溃');
-                }
-            })();
-        </script>
 </body>
 </html>
