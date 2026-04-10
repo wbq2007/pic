@@ -4,12 +4,16 @@
 // @version      0.3
 // @description  自动检测并点击页面中的“下一节”按钮，或隐藏弹窗。增强对 Shadow DOM、iframe、多语言与属性按钮的兼容性。
 // @match        *://*/*
+// @match        file://*/*
+// @include      *://*/*
+// @include      file://*/*
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==
 
 (function() {
     'use strict';
+    console.log('[AutoNext] IIFE loaded (v0.3)'); // debug: 表明脚本被注入并执行
 
     // 配置：修改这些项以改变行为
     const CONFIG = {
@@ -21,7 +25,7 @@
         attrKeys: ['aria-label','title','alt','value','placeholder','data-title'],
         checkInterval: 500,     // ms, 定期扫描
         maxAttempts: 240,       // 尝试次数
-        debug: false
+        debug: true
     };
 
     let attempts = 0;
