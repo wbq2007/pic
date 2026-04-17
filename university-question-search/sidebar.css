@@ -1,0 +1,181 @@
+/* sidebar.css - 侧边栏样式 */
+
+.uqs-sidebar {
+  position: fixed;
+  top: 80px;
+  right: 0;
+  width: 340px;
+  max-height: 70vh;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-right: none;
+  border-radius: 12px 0 0 12px;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  z-index: 2147483647;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  overflow: hidden;
+}
+
+.uqs-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 12px 0 0 0;
+}
+
+.uqs-sidebar-title {
+  font-weight: 600;
+  font-size: 15px;
+  user-select: none;
+}
+
+.uqs-sidebar-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.uqs-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.uqs-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.uqs-btn-sm {
+  padding: 3px 8px;
+  font-size: 11px;
+}
+
+.uqs-btn-icon {
+  padding: 3px 7px;
+  font-size: 14px;
+}
+
+.uqs-sidebar-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  background: #f8f9fa;
+}
+
+.uqs-sidebar-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.uqs-sidebar-body::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.uqs-status {
+  padding: 8px 12px;
+  background: #e8f5e9;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: #2e7d32;
+}
+
+.uqs-history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.uqs-history-item {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.uqs-q {
+  margin-bottom: 6px;
+}
+
+.uqs-q-text {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.uqs-a {
+  font-size: 13px;
+  padding: 6px 8px;
+  background: #f0f7ff;
+  border-radius: 4px;
+  color: #1565c0;
+}
+
+.uqs-a strong {
+  color: #2e7d32;
+}
+
+.uqs-source {
+  font-size: 11px;
+  color: #999;
+  margin-left: 4px;
+}
+
+.uqs-explanation {
+  font-size: 12px;
+  color: #666;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: #fffde7;
+  border-radius: 4px;
+  line-height: 1.5;
+}
+
+.uqs-notfound {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.uqs-error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.uqs-info {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.uqs-sidebar-footer {
+  padding: 8px 12px;
+  background: #fff;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.uqs-version {
+  font-size: 11px;
+  color: #999;
+}
+
+.uqs-loading {
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

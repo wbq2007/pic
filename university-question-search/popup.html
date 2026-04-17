@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学搜题助手</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-header">
+    <div class="logo">📚</div>
+    <div>
+      <h1>大学搜题助手</h1>
+      <p class="subtitle">自动识别题目 · 智能搜索答案</p>
+    </div>
+  </div>
+
+  <div class="popup-body">
+    <div class="setting-group">
+      <label class="setting-item">
+        <span class="label">自动答题</span>
+        <input type="checkbox" id="auto-answer" checked>
+        <span class="toggle"></span>
+      </label>
+      <div class="setting-desc">识别到题目后自动搜索并填入答案</div>
+    </div>
+
+    <div class="setting-group">
+      <label class="setting-item">
+        <span class="label">请求间隔</span>
+        <select id="delay">
+          <option value="500">0.5秒</option>
+          <option value="1000">1秒</option>
+          <option value="1500" selected>1.5秒</option>
+          <option value="2000">2秒</option>
+          <option value="3000">3秒</option>
+        </select>
+      </label>
+      <div class="setting-desc">搜题请求间隔时间，防止被封</div>
+    </div>
+
+    <div class="setting-group">
+      <h3>API 数据源</h3>
+      <div id="api-sources"></div>
+    </div>
+
+    <div class="setting-group">
+      <div class="manual-search">
+        <input type="text" id="manual-question" placeholder="输入题目手动搜索...">
+        <button id="manual-search-btn">搜索</button>
+      </div>
+      <div id="search-result"></div>
+    </div>
+  </div>
+
+  <div class="popup-footer">
+    <button id="open-sidebar-btn">打开侧边栏</button>
+    <span class="version">v1.0.0</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
