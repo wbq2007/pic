@@ -1,0 +1,12 @@
+a{
+    text-indent:lem;
+    display:inline-block;
+    font-size:22px;
+    color:#5E2D00;
+}
+a:nth-child(1){text-indent:0;}
+a:link,a:visited{text-decoration:none;}
+a:hover{
+    text-decoration:underline;
+    color:#f03;
+}

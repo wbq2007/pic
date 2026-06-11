@@ -1,0 +1,20 @@
+dl{display:none;}
+dd{
+    line-height:38px;
+    font-size:22px;
+    font-family:"微软雅黑";
+    color:#333;
+    }
+dd:before{content:url(../images/小图标.png);}
+dd:nth-child(odd){color:#BDA793;}
+dd:nth-child(2) em{
+    color:#f03;
+    font-weight:bold;
+    font-style:normal;
+    }
+dd:nth-child(3) em{
+    color:#5E2D00;
+    font-weight:bold;
+    font-style:normal;
+}
+:target {display:block;}

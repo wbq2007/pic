@@ -1,0 +1,4 @@
+/* 清除浏览器的默认样式 */
+*{list-style:none;outline:none;}
+/*全局控制*/
+body{font-family:"微软雅黑";text-align:center;}
