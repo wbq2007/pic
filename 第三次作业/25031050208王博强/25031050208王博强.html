@@ -5,18 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>表格表单</title>
     <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg,
+                #2c3e50,
+                #4a5568,
+                #6b4f7c,
+                #7c5c52);
+            padding: 30px;
+        }
         .container {
             width: 60%;
             height: 600px;
             margin: 0 auto;
-            background-color: #0ff;
+            background: linear-gradient(120deg,
+                #e0f7fa,
+                #e8f5fc,
+                #fef5f7,
+                #fff8e8);
+            border-radius: 10px;
         }
         .left {
             width: 35%;
             height: 95%;
             margin: 10px;
             float: left;
-            background-color:silver;
+            background-color: #4060a0;
+            border-radius: 10px;
         }
         .right {
             width: 60%;
@@ -27,6 +42,21 @@
         }
         h2 {
             padding-left: 2.5%;
+        }
+        form div {
+            margin: 15px 0;
+        }
+        button[type="submit"]{
+            background-color: #5b79c7;
+            border-radius: 5px;
+            border: none;
+            padding: 10px 20px;
+        }
+        button[type="reset"]{
+            background-color: #c75b5b;
+            border-radius: 5px;
+            border: none;
+            padding: 10px 20px;
         }
     </style>
 </head>
@@ -59,7 +89,7 @@
         </div>
         <div class="right">
             <h2>表单</h2>
-            <form style="padding-left: 2.5%;">
+            <form style="padding-left: 2.5%">
                 <div>
                     用户名：<input type="text" name="username">
                 </div>
