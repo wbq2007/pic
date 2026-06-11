@@ -28,53 +28,83 @@
         h2 {
             padding-left: 2.5%;
         }
-        #left {
-            width: 95%;
-            margin: 0 auto;
-            border-collapse: separate;
-            border-spacing: 2px;
-            padding: 8px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="left">
-                <h2>表格</h2>
-                <table id="left">
-                    <tr>
-                        <th>姓名</th>
-                        <th>班级</th>
-                        <th>分数</th>
-                    </tr>
-                    <tr>
-                        <td>张三</td>
-                        <td>一班</td>
-                        <td>85</td>
-                    </tr>
-                    <tr>
-                        <td>李四</td>
-                        <td>二班</td>
-                        <td>90</td>
-                    </tr>
-                    <tr>
-                        <td>王五</td>
-                        <td>三班</td>
-                        <td>88</td>
-                    </tr>
-                </table>
+            <h2>表格</h2>
+            <table border="1" cellspacing="5" cellpadding="8" align="center" width="95%">
+                <tr>
+                    <th>姓名</th>
+                    <th>班级</th>
+                    <th>分数</th>
+                </tr>
+                <tr>
+                    <td>张三</td>
+                    <td>一班</td>
+                    <td>85</td>
+                </tr>
+                <tr>
+                    <td>李四</td>
+                    <td>二班</td>
+                    <td>90</td>
+                </tr>
+                <tr>
+                    <td>王五</td>
+                    <td>三班</td>
+                    <td>88</td>
+                </tr>
+            </table>
         </div>
         <div class="right">
-                <h2>表单</h2>
-                <form>
-                    <label for="name">姓名:</label><br>
-                    <input type="text" id="name" name="name"><br><br>
-                    <label for="class">班级:</label><br>
-                    <input type="text" id="class" name="class"><br><br>
-                    <label for="score">分数:</label><br>
-                    <input type="text" id="score" name="score"><br><br>
-                    <input type="submit" value="提交">
-                </form>
+            <h2>表单</h2>
+            <form style="padding-left: 2.5%;">
+                <div>
+                    用户名：<input id="username" type="text" name="username">
+                </div>
+                <div>
+                    电子邮件：<input id="email" type="email" name="email">
+                </div>
+                <div>
+                    密码：<input id="password" type="password" name="password">
+                </div>
+                <div>
+                    年龄：<input id="age" type="number" name="age">
+                </div>
+                <div>
+                    性别：
+                    <input type="radio" name="gender" value="male" checked> 男
+                    <input type="radio" name="gender" value="female"> 女
+                </div>
+                <div>
+                    兴趣：
+                    <input type="checkbox" name="hobby" value="sing"> 唱歌
+                    <input type="checkbox" name="hobby" value="dance"> 跳舞
+                    <input type="checkbox" name="hobby" value="swim"> 游泳
+                </div>
+                <div>
+                    地址：
+                    <select>
+                        <optgroup label="北京">
+                            <option value="dongcheng" selected>东城区</option>
+                            <option value="xicheng">西城区</option>
+                            <option value="chaoyang">朝阳区</option>
+                            <option value="haidian">海淀区</option>
+                        </optgroup>
+                        <optgroup label="上海">
+                            <option value="pudong">浦东新区</option>
+                            <option value="xuhui">徐汇区</option>
+                            <option value="hongkou">虹口区</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit">提交</button>
+                    <button type="reset">重置</button>
+                </div>
+            </form>
         </div>
+    </div>
 </body>
 </html>
