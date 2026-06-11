@@ -25,32 +25,56 @@
             float: right;
             background-color: white;
         }
+        h2 {
+            padding-left: 2.5%;
+        }
+        #left {
+            width: 95%;
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 2px;
+            padding: 8px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="left">
                 <h2>表格</h2>
-                <table border="1" cellspacing="0" cellpadding="5">
+                <table id="left">
                     <tr>
                         <th>姓名</th>
-                        <th>年龄</th>
-                        <th>性别</th>
+                        <th>班级</th>
+                        <th>分数</th>
                     </tr>
                     <tr>
                         <td>张三</td>
-                        <td>25</td>
-                        <td>男</td>
+                        <td>一班</td>
+                        <td>85</td>
                     </tr>
                     <tr>
                         <td>李四</td>
-                        <td>30</td>
-                        <td>女</td>
+                        <td>二班</td>
+                        <td>90</td>
                     </tr>
+                    <tr>
+                        <td>王五</td>
+                        <td>三班</td>
+                        <td>88</td>
+                    </tr>
+                </table>
         </div>
         <div class="right">
                 <h2>表单</h2>
-                <p>这是右侧的内容区域，可以放置一些文本、图片或其他元素。</p>
+                <form>
+                    <label for="name">姓名:</label><br>
+                    <input type="text" id="name" name="name"><br><br>
+                    <label for="class">班级:</label><br>
+                    <input type="text" id="class" name="class"><br><br>
+                    <label for="score">分数:</label><br>
+                    <input type="text" id="score" name="score"><br><br>
+                    <input type="submit" value="提交">
+                </form>
         </div>
 </body>
 </html>
