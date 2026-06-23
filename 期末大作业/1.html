@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>25级的网店</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "宋体", SimSun;
+        }
+
+        /* 顶部 */
+        .top-bar {
+            background: #e0e0e0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .shop-title {
+            font-size: 30px;
+            font-weight: bold;
+            color: #bb0000;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            background: #69b3e7;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .search-box {
+            width: 160px;
+            height: 28px;
+            border: 1px solid #333;
+            border-radius: 14px;
+            padding: 0 12px;
+            outline: none;
+        }
+        .auth-buttons {
+            position: absolute;
+            right: 30px;
+            display: flex;
+            gap: 12px;
+        }
+        .auth-btn {
+            width: 55px;
+            height: 30px;
+            border: none;
+            border-radius: 15px;
+            background: #fff;
+            color: #000;
+            font-size: 13px;
+            cursor: pointer;
+            transition: .3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            line-height: 30px;
+        }
+        .auth-btn:hover {
+            color: #ff3300;
+            box-shadow: 0 2px 8px #666;
+        }
+
+        /* 主体 */
+        .container {
+            display: flex;
+        }
+
+        /* 左侧 */
+        .left {
+            width: 110px;
+            background: #f0f0f0;
+            min-height: calc(100vh - 115px);
+            padding: 15px 12px;
+        }
+        .left h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        input[name="tab"] {
+            display: none;
+        }
+        .left label {
+            display: block;
+            line-height: 2.2;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 2px 4px;
+            transition: .3s;
+            border-radius: 4px;
+        }
+
+        /* 悬停变色 */
+        .left label:hover {
+            background-color: #9fd0f5;
+            color: #fff;
+        }
+
+        /* 选中高亮 */
+        #tab1:checked ~ .left label[for="tab1"],
+        #tab2:checked ~ .left label[for="tab2"],
+        #tab3:checked ~ .left label[for="tab3"],
+        #tab4:checked ~ .left label[for="tab4"] {
+            background-color: #69b3e7;
+            color: #fff;
+        }
+
+        /* 右侧 */
+        .right {
+            flex: 1;
+            padding: 20px;
+            min-height: calc(100vh - 115px);
+        }
+
+        /* ── 所有商品共用一份列表 ── */
+        .cat-title {
+            font-size: 18px;
+            margin: 20px 0 10px;
+            color: #333;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #69b3e7;
+            display: inline-block;
+        }
+
+        .goods {
+            display: inline-block;
+            margin: 12px;
+            text-align: center;
+            vertical-align: top;
+            width: 140px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            transition: .3s;
+        }
+        .goods:hover {
+            box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+            transform: translateY(-3px);
+        }
+        .goods img {
+            width: 120px;
+            height: 120px;
+            border: 1px solid #ccc;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            background: #f9f9f9;
+            object-fit: cover;
+        }
+        .goods p {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .goods .g-price {
+            color: #bb0000;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* ── 分类分组 ── */
+        .cat-group {
+            margin-bottom: 20px;
+        }
+
+        /* ── 核心：纯CSS筛选逻辑 ── */
+        /* 默认全部隐藏 */
+        .cat-group       { display: none; }
+
+        /* tab1=所有 → 显示全部分类组 */
+        #tab1:checked ~ .right .cat-group {
+            display: block;
+        }
+
+        /* tab2=鞋 → 只显示 shoes */
+        #tab2:checked ~ .right .cat-shoes {
+            display: block;
+        }
+
+        /* tab3=运动服装 → 只显示 clothing */
+        #tab3:checked ~ .right .cat-clothing {
+            display: block;
+        }
+
+        /* tab4=其他 → 只显示 other */
+        #tab4:checked ~ .right .cat-other {
+            display: block;
+        }
+
+        /* ── 滑入动画 ── */
+        .cat-group {
+            animation: slideIn .4s ease both;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(40px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ── 空状态提示 ── */
+        .empty-tip {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        /* 底部 */
+        footer {
+            background: #eee;
+            padding: 20px;
+            margin-top: 20px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .f-left {
+            flex: 1;
+            min-width: 200px;
+            line-height: 2;
+        }
+        .f-right {
+            flex: 1;
+            min-width: 200px;
+        }
+        .f-right p {
+            margin: 8px 0;
+        }
+        .f-right input, textarea {
+            padding: 4px;
+            width: 200px;
+            border: 1px solid #999;
+        }
+        .submit {
+            padding: 5px 15px;
+            cursor: pointer;
+            border: 1px solid #999;
+            background: #fff;
+            transition: .3s;
+        }
+        .submit:hover {
+            background: #69b3e7;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="shop-title">25级的网店</div>
+    </div>
+
+    <div class="nav-bar">
+        <input class="search-box" placeholder="Search">
+        <div class="auth-buttons">
+            <a href="login.html" class="auth-btn">登录</a>
+            <a href="#register" class="auth-btn">注册</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- radio 必须在 container 内、left 和 right 之前，这样 ~ 兄弟选择器才能生效 -->
+        <input type="radio" name="tab" id="tab1" checked>
+        <input type="radio" name="tab" id="tab2">
+        <input type="radio" name="tab" id="tab3">
+        <input type="radio" name="tab" id="tab4">
+
+        <div class="left">
+            <h3>类型</h3>
+            <label for="tab1">所有</label>
+            <label for="tab2">鞋</label>
+            <label for="tab3">运动服装</label>
+            <label for="tab4">其他</label>
+        </div>
+
+        <div class="right">
+
+            <!-- ═══════ 鞋类 ═══════ -->
+            <div class="cat-group cat-shoes">
+                <h4 class="cat-title">鞋类</h4>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop" alt="运动跑鞋">
+                    <p>运动跑鞋</p>
+                    <p class="g-price">¥299</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=400&fit=crop" alt="休闲帆布鞋">
+                    <p>休闲帆布鞋</p>
+                    <p class="g-price">¥159</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=400&h=400&fit=crop" alt="篮球鞋">
+                    <p>篮球鞋</p>
+                    <p class="g-price">¥459</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1520219306100-ec4afeeefe58?w=400&h=400&fit=crop" alt="登山靴">
+                    <p>登山靴</p>
+                    <p class="g-price">¥529</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=400&h=400&fit=crop" alt="拖鞋">
+                    <p>居家拖鞋</p>
+                    <p class="g-price">¥39</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=400&fit=crop" alt="户外溯溪鞋">
+                    <p>户外溯溪鞋</p>
+                    <p class="g-price">¥299</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1520219306100-ec4afeeefe58?w=400&h=400&fit=crop" alt="雪地靴">
+                    <p>雪地靴</p>
+                    <p class="g-price">¥329</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=400&h=400&fit=crop" alt="高帮板鞋">
+                    <p>高帮板鞋</p>
+                    <p class="g-price">¥239</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop" alt="毛毛虫童鞋">
+                    <p>毛毛虫童鞋</p>
+                    <p class="g-price">¥129</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=400&fit=crop" alt="高尔夫球鞋">
+                    <p>高尔夫球鞋</p>
+                    <p class="g-price">¥599</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1562273138-f46be4ebdf33?w=400&h=400&fit=crop" alt="洞洞鞋">
+                    <p>洞洞鞋</p>
+                    <p class="g-price">¥89</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?w=400&h=400&fit=crop" alt="老人健步鞋">
+                    <p>老人健步鞋</p>
+                    <p class="g-price">¥199</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=400&h=400&fit=crop" alt="儿童运动鞋">
+                    <p>儿童运动鞋</p>
+                    <p class="g-price">¥159</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1610398752800-146f269dfcc8?w=400&h=400&fit=crop" alt="工装靴">
+                    <p>工装靴</p>
+                    <p class="g-price">¥399</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1603487742131-4160ec999306?w=400&h=400&fit=crop" alt="编织草鞋">
+                    <p>编织草鞋</p>
+                    <p class="g-price">¥109</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=400&h=400&fit=crop" alt="贝壳头">
+                    <p>贝壳头</p>
+                    <p class="g-price">¥459</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1579338559194-a162d19bf842?w=400&h=400&fit=crop" alt="椰子鞋">
+                    <p>椰子鞋</p>
+                    <p class="g-price">¥429</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=400&h=400&fit=crop" alt="空军一号">
+                    <p>空军一号</p>
+                    <p class="g-price">¥599</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1520256862855-398228c41684?w=400&h=400&fit=crop" alt="德训鞋">
+                    <p>德训鞋</p>
+                    <p class="g-price">¥259</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400&h=400&fit=crop" alt="低帮板鞋">
+                    <p>低帮板鞋</p>
+                    <p class="g-price">¥199</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=400&h=400&fit=crop" alt="切尔西靴">
+                    <p>切尔西靴</p>
+                    <p class="g-price">¥469</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&h=400&fit=crop" alt="内增高鞋">
+                    <p>内增高鞋</p>
+                    <p class="g-price">¥259</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=400&fit=crop" alt="鳄鱼纹皮鞋">
+                    <p>鳄鱼纹皮鞋</p>
+                    <p class="g-price">¥459</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=400&fit=crop" alt="万斯经典">
+                    <p>万斯经典</p>
+                    <p class="g-price">¥429</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&h=400&fit=crop" alt="透气网面跑鞋">
+                    <p>透气网面跑鞋</p>
+                    <p class="g-price">¥349</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1603487742131-4160ec999306?w=400&h=400&fit=crop" alt="凉鞋">
+                    <p>凉鞋</p>
+                    <p class="g-price">¥129</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=400&h=400&fit=crop" alt="专业竞速跑鞋">
+                    <p>专业竞速跑鞋</p>
+                    <p class="g-price">¥699</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=400&fit=crop" alt="匡威经典">
+                    <p>匡威经典</p>
+                    <p class="g-price">¥399</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1562273138-f46be4ebdf33?w=400&h=400&fit=crop" alt="果冻鞋">
+                    <p>果冻鞋</p>
+                    <p class="g-price">¥99</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=400&h=400&fit=crop" alt="马丁靴">
+                    <p>马丁靴</p>
+                    <p class="g-price">¥499</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1614252369475-531eba835eb1?w=400&h=400&fit=crop" alt="男士商务皮鞋">
+                    <p>男士商务皮鞋</p>
+                    <p class="g-price">¥389</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=400&fit=crop" alt="鬼冢虎">
+                    <p>鬼冢虎</p>
+                    <p class="g-price">¥539</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=400&h=400&fit=crop" alt="阿甘鞋">
+                    <p>阿甘鞋</p>
+                    <p class="g-price">¥359</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=400&fit=crop" alt="雨靴">
+                    <p>雨靴</p>
+                    <p class="g-price">¥159</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&h=400&fit=crop" alt="女士高跟鞋">
+                    <p>女士高跟鞋</p>
+                    <p class="g-price">¥329</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400&h=400&fit=crop" alt="舞蹈鞋">
+                    <p>舞蹈鞋</p>
+                    <p class="g-price">¥169</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&h=400&fit=crop" alt="一脚蹬懒人鞋">
+                    <p>一脚蹬懒人鞋</p>
+                    <p class="g-price">¥139</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=400&h=400&fit=crop" alt="飞织袜子鞋">
+                    <p>飞织袜子鞋</p>
+                    <p class="g-price">¥189</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=400&h=400&fit=crop" alt="松糕厚底鞋">
+                    <p>松糕厚底鞋</p>
+                    <p class="g-price">¥249</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1603487742131-4160ec999306?w=400&h=400&fit=crop" alt="豆豆鞋">
+                    <p>豆豆鞋</p>
+                    <p class="g-price">¥179</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=400&fit=crop" alt="复古小白鞋">
+                    <p>复古小白鞋</p>
+                    <p class="g-price">¥219</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=400&h=400&fit=crop" alt="厚底老爹鞋">
+                    <p>厚底老爹鞋</p>
+                    <p class="g-price">¥279</p>
+                </div>
+            </div>
+
+            <!-- ═══════ 运动服装 ═══════ -->
+            <div class="cat-group cat-clothing">
+                <h4 class="cat-title">运动服装</h4>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop" alt="速干T恤">
+                    <p>速干T恤</p>
+                    <p class="g-price">¥89</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=400&h=400&fit=crop" alt="运动短裤">
+                    <p>运动短裤</p>
+                    <p class="g-price">¥120</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=400&fit=crop" alt="运动外套">
+                    <p>运动外套</p>
+                    <p class="g-price">¥259</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&h=400&fit=crop" alt="瑜伽裤">
+                    <p>瑜伽裤</p>
+                    <p class="g-price">¥149</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop" alt="运动卫衣">
+                    <p>运动卫衣</p>
+                    <p class="g-price">¥199</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=400&h=400&fit=crop" alt="沙滩裤">
+                    <p>沙滩裤</p>
+                    <p class="g-price">¥99</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop" alt="保暖卫衣">
+                    <p>保暖卫衣</p>
+                    <p class="g-price">¥229</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1548883354-7622d03aca27?w=400&h=400&fit=crop" alt="防晒衣">
+                    <p>防晒衣</p>
+                    <p class="g-price">¥159</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop" alt="户外马甲">
+                    <p>户外马甲</p>
+                    <p class="g-price">¥259</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop" alt="冲锋衣">
+                    <p>冲锋衣</p>
+                    <p class="g-price">¥499</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop" alt="防雨外套">
+                    <p>防雨外套</p>
+                    <p class="g-price">¥289</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=400&fit=crop" alt="紧身压缩衣">
+                    <p>紧身压缩衣</p>
+                    <p class="g-price">¥189</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1598032895397-b9472444bf93?w=400&h=400&fit=crop" alt="速干衬衣">
+                    <p>速干衬衣</p>
+                    <p class="g-price">¥189</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=400&h=400&fit=crop" alt="运动长裤">
+                    <p>运动长裤</p>
+                    <p class="g-price">¥179</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1483721310020-03333e577078?w=400&h=400&fit=crop" alt="运动套装">
+                    <p>运动套装</p>
+                    <p class="g-price">¥299</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1598032895397-b9472444bf93?w=400&h=400&fit=crop" alt="运动衬衫">
+                    <p>运动衬衫</p>
+                    <p class="g-price">¥179</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop" alt="运动棉服">
+                    <p>运动棉服</p>
+                    <p class="g-price">¥459</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop" alt="跑步短裤">
+                    <p>跑步短裤</p>
+                    <p class="g-price">¥79</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=400&fit=crop" alt="运动马甲">
+                    <p>运动马甲</p>
+                    <p class="g-price">¥199</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=400&fit=crop" alt="保暖内衣">
+                    <p>保暖内衣</p>
+                    <p class="g-price">¥129</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&h=400&fit=crop" alt="跑步背心">
+                    <p>跑步背心</p>
+                    <p class="g-price">¥99</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&h=400&fit=crop" alt="瑜伽上衣">
+                    <p>瑜伽上衣</p>
+                    <p class="g-price">¥139</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&h=400&fit=crop" alt="骑行服">
+                    <p>骑行服</p>
+                    <p class="g-price">¥259</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1562157873-818bc0726f68?w=400&h=400&fit=crop" alt="训练背心">
+                    <p>训练背心</p>
+                    <p class="g-price">¥89</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=400&h=400&fit=crop" alt="运动背心">
+                    <p>运动背心</p>
+                    <p class="g-price">¥69</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=400&h=400&fit=crop" alt="运动内衣">
+                    <p>运动内衣</p>
+                    <p class="g-price">¥99</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop" alt="弹力牛仔裤">
+                    <p>弹力牛仔裤</p>
+                    <p class="g-price">¥229</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=400&fit=crop" alt="运动夹克">
+                    <p>运动夹克</p>
+                    <p class="g-price">¥329</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?w=400&h=400&fit=crop" alt="压缩袜">
+                    <p>压缩袜</p>
+                    <p class="g-price">¥39</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&h=400&fit=crop" alt="篮球背心">
+                    <p>篮球背心</p>
+                    <p class="g-price">¥89</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=400&h=400&fit=crop" alt="泳衣">
+                    <p>泳衣</p>
+                    <p class="g-price">¥129</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=400&fit=crop" alt="防风夹克">
+                    <p>防风夹克</p>
+                    <p class="g-price">¥369</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop" alt="篮球服套装">
+                    <p>篮球服套装</p>
+                    <p class="g-price">¥199</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop" alt="训练手套">
+                    <p>训练手套</p>
+                    <p class="g-price">¥59</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=400&fit=crop" alt="健身短裤">
+                    <p>健身短裤</p>
+                    <p class="g-price">¥69</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=400&h=400&fit=crop" alt="训练短裤">
+                    <p>训练短裤</p>
+                    <p class="g-price">¥89</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=400&fit=crop" alt="运动背带裤">
+                    <p>运动背带裤</p>
+                    <p class="g-price">¥239</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&h=400&fit=crop" alt="足球服">
+                    <p>足球服</p>
+                    <p class="g-price">¥149</p>
+                </div>
+            </div>
+
+            <!-- ═══════ 其他 ═══════ -->
+            <div class="cat-group cat-other">
+                <h4 class="cat-title">其他</h4>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400&h=400&fit=crop" alt="复古陶瓷马克杯">
+                    <p>复古陶瓷马克杯</p>
+                    <p class="g-price">¥30</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop" alt="运动水壶">
+                    <p>运动水壶</p>
+                    <p class="g-price">¥45</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop" alt="健身包">
+                    <p>健身包</p>
+                    <p class="g-price">¥189</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&h=400&fit=crop" alt="瑜伽垫">
+                    <p>瑜伽垫</p>
+                    <p class="g-price">¥79</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=400&fit=crop" alt="运动护腕">
+                    <p>运动护腕</p>
+                    <p class="g-price">¥25</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=400&fit=crop" alt="运动护膝">
+                    <p>运动护膝</p>
+                    <p class="g-price">¥69</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1521369909029-2afed882baee?w=400&h=400&fit=crop" alt="运动头巾">
+                    <p>运动头巾</p>
+                    <p class="g-price">¥35</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=400&fit=crop" alt="护踝">
+                    <p>护踝</p>
+                    <p class="g-price">¥49</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop" alt="哑铃套装">
+                    <p>哑铃套装</p>
+                    <p class="g-price">¥199</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?w=400&h=400&fit=crop" alt="运动袜子">
+                    <p>运动袜子</p>
+                    <p class="g-price">¥25</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&h=400&fit=crop" alt="沙袋">
+                    <p>沙袋</p>
+                    <p class="g-price">¥259</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop" alt="运动手表">
+                    <p>运动手表</p>
+                    <p class="g-price">¥399</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop" alt="运动蓝牙耳机">
+                    <p>运动蓝牙耳机</p>
+                    <p class="g-price">¥199</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1521369909029-2afed882baee?w=400&h=400&fit=crop" alt="运动帽">
+                    <p>运动帽</p>
+                    <p class="g-price">¥59</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&h=400&fit=crop" alt="运动毛巾">
+                    <p>运动毛巾</p>
+                    <p class="g-price">¥29</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop" alt="蛋白粉摇摇杯">
+                    <p>蛋白粉摇摇杯</p>
+                    <p class="g-price">¥39</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&h=400&fit=crop" alt="弹力带">
+                    <p>弹力带</p>
+                    <p class="g-price">¥39</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&h=400&fit=crop" alt="跳绳">
+                    <p>跳绳</p>
+                    <p class="g-price">¥35</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&h=400&fit=crop" alt="拉力绳">
+                    <p>拉力绳</p>
+                    <p class="g-price">¥49</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop" alt="运动腰包">
+                    <p>运动腰包</p>
+                    <p class="g-price">¥69</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=400&h=400&fit=crop" alt="旅行箱">
+                    <p>旅行箱</p>
+                    <p class="g-price">¥499</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?w=400&h=400&fit=crop" alt="运动发带">
+                    <p>运动发带</p>
+                    <p class="g-price">¥25</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&h=400&fit=crop" alt="平衡垫">
+                    <p>平衡垫</p>
+                    <p class="g-price">¥89</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&h=400&fit=crop" alt="呼啦圈">
+                    <p>呼啦圈</p>
+                    <p class="g-price">¥49</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop" alt="健身手套">
+                    <p>健身手套</p>
+                    <p class="g-price">¥59</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&h=400&fit=crop" alt="拳击手套">
+                    <p>拳击手套</p>
+                    <p class="g-price">¥129</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop" alt="运动臂包">
+                    <p>运动臂包</p>
+                    <p class="g-price">¥49</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&h=400&fit=crop" alt="健身垫">
+                    <p>健身垫</p>
+                    <p class="g-price">¥129</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop" alt="水杯">
+                    <p>水杯</p>
+                    <p class="g-price">¥39</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&h=400&fit=crop" alt="仰卧起坐辅助器">
+                    <p>仰卧起坐辅助器</p>
+                    <p class="g-price">¥89</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&h=400&fit=crop" alt="引体向上器">
+                    <p>引体向上器</p>
+                    <p class="g-price">¥199</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=400&h=400&fit=crop" alt="泡沫轴">
+                    <p>泡沫轴</p>
+                    <p class="g-price">¥79</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&h=400&fit=crop" alt="握力器">
+                    <p>握力器</p>
+                    <p class="g-price">¥29</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop" alt="壶铃">
+                    <p>壶铃</p>
+                    <p class="g-price">¥159</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=400&fit=crop" alt="跑步腰带">
+                    <p>跑步腰带</p>
+                    <p class="g-price">¥59</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400&h=400&fit=crop" alt="运动太阳镜">
+                    <p>运动太阳镜</p>
+                    <p class="g-price">¥159</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop" alt="洗漱包">
+                    <p>洗漱包</p>
+                    <p class="g-price">¥49</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&h=400&fit=crop" alt="训练锥">
+                    <p>训练锥</p>
+                    <p class="g-price">¥35</p>
+                </div>
+                <div class="goods">
+                    <img src="https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=400&h=400&fit=crop" alt="筋膜枪">
+                    <p>筋膜枪</p>
+                    <p class="g-price">¥299</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer id="register">
+        <div class="f-left">
+            <h3>联系我们</h3>
+            <p>Phone: 123-4567890</p>
+            <p>Email: 123456@qq.com</p>
+            <p>Wechat: mychat_1</p>
+            <p>© My Restaurant</p>
+        </div>
+        <div class="f-right">
+            <h3>注册 & 留言</h3>
+            <p>姓名：<input type="text" name="name"></p>
+            <p>邮箱：<input type="email" name="email"></p>
+            <p>电话：<input type="tel" name="phone"></p>
+            <p>密码：<input type="password" name="password"></p>
+            <p>匿名留言：<textarea name="message"></textarea></p>
+            <button class="submit">提交</button>
+        </div>
+    </footer>
+</body>
+</html>

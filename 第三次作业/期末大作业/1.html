@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>25级的网店</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "宋体", SimSun;
+        }
+
+        /* 顶部 */
+        .top-bar {
+            background: #e0e0e0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .shop-title {
+            font-size: 30px;
+            font-weight: bold;
+            color: #bb0000;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            background: #69b3e7;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .search-box {
+            width: 160px;
+            height: 28px;
+            border: 1px solid #333;
+            border-radius: 14px;
+            padding: 0 12px;
+            outline: none;
+        }
+        .auth-buttons {
+            position: absolute;
+            right: 30px;
+            display: flex;
+            gap: 12px;
+        }
+        .auth-btn {
+            width: 55px;
+            height: 30px;
+            border: none;
+            border-radius: 15px;
+            background: #fff;
+            color: #000;
+            font-size: 13px;
+            cursor: pointer;
+            transition: .3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            line-height: 30px;
+        }
+        .auth-btn:hover {
+            color: #ff3300;
+            box-shadow: 0 2px 8px #666;
+        }
+
+        /* 主体 */
+        .container {
+            display: flex;
+        }
+
+        /* 左侧 */
+        .left {
+            width: 110px;
+            background: #f0f0f0;
+            min-height: calc(100vh - 115px);
+            padding: 15px 12px;
+        }
+        .left h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        input[name="tab"] {
+            display: none;
+        }
+        .left label {
+            display: block;
+            line-height: 2.2;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 2px 4px;
+        }
+
+        /* 蓝色持久：核心 */
+        #tab1:checked ~ .left label[for="tab1"],
+        #tab2:checked ~ .left label[for="tab2"],
+        #tab3:checked ~ .left label[for="tab3"],
+        #tab4:checked ~ .left label[for="tab4"] {
+            background-color: #69b3e7;
+            color: #fff;
+        }
+
+        /* 右侧 */
+        .right {
+            flex: 1;
+            padding: 20px;
+            min-height: calc(100vh - 115px);
+            overflow: hidden;
+            position: relative;
+        }
+        .page {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: calc(100% - 40px);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: .5s ease;
+        }
+
+        /* 滑入动画：核心 */
+        #tab1:checked ~ .right .page1 {
+            opacity: 1; transform: translateX(0);
+        }
+        #tab2:checked ~ .right .page2 {
+            opacity: 1; transform: translateX(0);
+        }
+        #tab3:checked ~ .right .page3 {
+            opacity: 1; transform: translateX(0);
+        }
+        #tab4:checked ~ .right .page4 {
+            opacity: 1; transform: translateX(0);
+        }
+
+        /* 商品 */
+        .goods {
+            display: inline-block;
+            margin: 15px;
+            text-align: center;
+        }
+        .goods img {
+            width: 120px;
+            height: 120px;
+            border: 1px solid #ccc;
+            margin-bottom: 8px;
+        }
+
+        /* 底部 */
+        footer {
+            background: #eee;
+            padding: 20px;
+            margin-top: 20px;
+            display: flex;
+            gap: 30px;
+        }
+        .f-left {
+            flex: 1;
+            line-height: 2;
+        }
+        .f-right {
+            flex: 1;
+        }
+        .f-right p {
+            margin: 8px 0;
+        }
+        .f-right input, textarea {
+            padding: 4px;
+            width: 200px;
+            border: 1px solid #999;
+        }
+        .submit {
+            padding: 5px 15px;
+            cursor: pointer;
+            border: 1px solid #999;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="shop-title">25级的网店</div>
+    </div>
+
+    <div class="nav-bar">
+        <input class="search-box" placeholder="Search">
+        <div class="auth-buttons">
+            <a href="login.html" class="auth-btn">登录</a>
+            <a href="#register" class="auth-btn">注册</a>
+        </div>
+    </div>
+
+    <!-- 关键：radio 放在 container 最前面 -->
+    <div class="container">
+        <input type="radio" name="tab" id="tab1">
+        <input type="radio" name="tab" id="tab2">
+        <input type="radio" name="tab" id="tab3">
+        <input type="radio" name="tab" id="tab4">
+
+        <div class="left">
+            <h3>类型</h3>
+            <label for="tab1">所有</label>
+            <label for="tab2">鞋</label>
+            <label for="tab3">运动服装</label>
+            <label for="tab4">其他</label>
+        </div>
+
+        <div class="right">
+            <div class="page page1">
+                <h4>鞋类</h4>
+                <div class="goods"><img><p>鞋类</p><p>50</p></div>
+                <h4>运动服装</h4>
+                <div class="goods"><img><p>运动服装(夏)</p><p>100</p></div>
+                <div class="goods"><img><p>运动服装(冬)</p><p>100</p></div>
+                <h4>其他</h4>
+                <div class="goods"><img src="image/豆包.png"><p>复古陶瓷马克杯</p><p>30元</p></div>
+            </div>
+            <div class="page page2">
+                <h4>鞋类</h4>
+                <div class="goods"><img><p>鞋类</p><p>50</p></div>
+            </div>
+            <div class="page page3">
+                <h4>运动服装</h4>
+                <div class="goods"><img><p>运动服装(夏)</p><p>100</p></div>
+                <div class="goods"><img><p>运动服装(冬)</p><p>100</p></div>
+            </div>
+            <div class="page page4">
+                <h4>其他</h4>
+                <div class="goods"><img src="image/豆包.png"><p>复古陶瓷马克杯</p><p>30元</p></div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="register">
+        <div class="f-left">
+            <h3>联系我们</h3>
+            <p>Phone: 123-4567890</p>
+            <p>Email: 123456@qq.com</p>
+            <p>Wechat: mychat_1</p>
+            <p>© My Restaurant</p>
+        </div>
+        <div class="f-right">
+            <h3>注册 & 留言</h3>
+            <p>姓名：<input type="text" name="name"></p>
+            <p>邮箱：<input type="email" name="email"></p>
+            <p>电话：<input type="tel" name="phone"></p>
+            <p>密码：<input type="password" name="password"></p>
+            <p>匿名留言：<textarea name="message"></textarea></p>
+            <button class="submit">提交</button>
+        </div>
+    </footer>
+</body>
+</html>
